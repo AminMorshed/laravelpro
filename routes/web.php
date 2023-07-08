@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
+use RealRashid\SweetAlert\Facades\Alert;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+
     return view('welcome');
 });
 
@@ -23,6 +25,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::prefix('auth/')->group(function (){
+//    Alert::error('xb','gnbs');
     Route::get('google',[GoogleAuthController::class , 'redirect'])->name('auth.google');
     Route::get('google/callback',[GoogleAuthController::class , 'callback']);
 });
