@@ -22,12 +22,14 @@ Route::get('/', function () {
 
 
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::prefix('auth/')->group(function (){
-//    Alert::error('xb','gnbs');
     Route::get('google',[GoogleAuthController::class , 'redirect'])->name('auth.google');
     Route::get('google/callback',[GoogleAuthController::class , 'callback']);
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/secret', function (){
+   return 'secret';
+})->middleware(['auth' , 'password.confirm']);
