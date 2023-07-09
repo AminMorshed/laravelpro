@@ -19,8 +19,8 @@ class ProfileController extends Controller
     public function postManageTwoFactor(Request $request)
     {
         return $request->validate([
-           'type' => 'required|in:sms,Off',
-           'phone' => 'required_unless:type,off',
+           'type' => 'required|in:sms,off',
+           'phone' => 'required_if:type,sms',
         ]);
     }
 }

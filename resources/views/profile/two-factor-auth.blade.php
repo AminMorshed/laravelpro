@@ -19,7 +19,7 @@
         <div class="form-group">
             <label for="type">Type</label>
             <select name="type" id="type" class="form-control">
-                <option value="off">Off</option>
+                <option value="off">off</option>
                 <option value="sms">sms</option>
             </select>
         </div>
