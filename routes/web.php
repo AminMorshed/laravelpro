@@ -38,6 +38,7 @@ Route::get('/secret', function () {
 Route::prefix('profile/')->group(function () {
     Route::get('', [ProfileController::class, 'index'])->name('profile');
     Route::get('twofactor', [ProfileController::class, 'manageTwoFactor'])->name('profile.2fa.manage');
+    Route::post('twofactor', [ProfileController::class, 'postManageTwoFactor']);
 });
 
 

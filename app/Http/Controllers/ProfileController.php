@@ -15,4 +15,12 @@ class ProfileController extends Controller
     {
         return view('profile.two-factor-auth');
     }
+
+    public function postManageTwoFactor(Request $request)
+    {
+        return $request->validate([
+           'type' => 'required|in:sms,Off',
+           'phone' => 'required_unless:type,off',
+        ]);
+    }
 }
