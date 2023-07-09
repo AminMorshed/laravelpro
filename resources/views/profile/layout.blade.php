@@ -8,10 +8,12 @@
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills">
                             <li class="nav-item">
-                                <a class="nav-link active" href="{{route('profile')}}">Index</a>
+                                @yield('linkIndex')
+
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{route('profile.2fa.manage')}}">TwoFactorAuth</a>
+                                @yield('linkTwoFactor')
+
                             </li>
                         </ul>
                     </div>
