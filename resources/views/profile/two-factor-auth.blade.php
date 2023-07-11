@@ -19,14 +19,17 @@
         <div class="form-group">
             <label for="type">Type</label>
             <select name="type" id="type" class="form-control">
-                <option value="off">off</option>
-                <option value="sms">sms</option>
+                @foreach(config('twofactor.types') as $key => $name)
+                    <option value="{{$key}}"{{old('type') == $key || auth()->user()->hasTwoFactory($key) ? 'selected' : ''}}>{{$name}}</option>
+
+                @endforeach
             </select>
         </div>
 
         <div class="form-group mt-3">
             <label for="Phone">phone</label>
-            <input type="text" name="phone" id="phone" class="form-control" placeholder="Please add your phone number">
+            <input type="text" name="phone" id="phone" class="form-control" placeholder="Please add your phone number"
+                   value="{{old('phone_number') ?? auth()->user()->phone_number}}">
         </div>
 
         <div class="form-group mt-3">

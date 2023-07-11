@@ -18,7 +18,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 */
 
 Route::get('/', function () {
-
+   return auth()->user()->activecode()->create([
+       'code' => 111111,
+       'expired_at' => now()->addMinutes(10),
+   ]);
     return view('welcome');
 });
 
@@ -35,10 +38,12 @@ Route::get('/secret', function () {
     return 'secret';
 })->middleware(['auth', 'password.confirm']);
 
-Route::prefix('profile/')->group(function () {
+Route::prefix('profile/')->middleware('auth')->group(function () {
     Route::get('', [ProfileController::class, 'index'])->name('profile');
     Route::get('twofactor', [ProfileController::class, 'manageTwoFactor'])->name('profile.2fa.manage');
     Route::post('twofactor', [ProfileController::class, 'postManageTwoFactor']);
+    Route::get('twodactor/phone', [ProfileController::class, 'getPhoneVerify'])->name('profile.2fa.phone');
+    Route::post('twodactor/phone', [ProfileController::class, 'postPhoneVerify']);
 });
 
 
