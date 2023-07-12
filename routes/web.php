@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -18,15 +19,12 @@ use RealRashid\SweetAlert\Facades\Alert;
 */
 
 Route::get('/', function () {
-   return auth()->user()->activecode()->create([
-       'code' => 111111,
-       'expired_at' => now()->addMinutes(10),
-   ]);
     return view('welcome');
 });
 
 
 Auth::routes(['verify' => true]);
+
 
 Route::prefix('auth/')->group(function () {
     Route::get('google', [GoogleAuthController::class, 'redirect'])->name('auth.google');

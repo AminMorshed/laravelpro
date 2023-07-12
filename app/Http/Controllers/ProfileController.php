@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActiveCode;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -25,6 +26,10 @@ class ProfileController extends Controller
 
         if ($date['type'] === 'sms') {
             if ($request->user()->phone_number !== $date['phone']) {
+
+                $code = ActiveCode::generateCode($request->user());
+                $request->session()->flash('phone',$date['phone']);
+
                 return redirect(route('profile.2fa.phone'));
             } else {
                 $request->user()->update([
@@ -42,8 +47,15 @@ class ProfileController extends Controller
         return back();
     }
 
-    public function getPhoneVerify()
+    public function getPhoneVerify(Request $request)
     {
+        if (! $request->session()->has('phone')){
+            return redirect(route('profile.2fa.manage'));
+        }
+
+        $request->session()->reflash();
+
+
         return view('profile.phone-verify');
     }
 
@@ -53,6 +65,24 @@ class ProfileController extends Controller
             'token' => 'required',
         ]);
 
-        return $request->token;
+        if (! $request->session()->has('phone')){
+            return redirect(route('profile.2fa.manage'));
+        }
+
+        $status = ActiveCode::verifyCode($request->token, $request->user());
+
+        if ($status) {
+            $request->user()->activeCode()->delete();
+            $request->user()->update([
+                'phone_number' => $request->session()->get('phone'),
+               'two_factor_type' => 'sms'
+            ]);
+
+            alert()->success('ok','its ok');
+        }else{
+            alert()->error('not ok','its not ok');
+        }
+
+        return redirect(route('profile.2fa.manage'));
     }
 }
