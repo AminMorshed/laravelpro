@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+ use http\Env\Request;
  use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,7 +23,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'two_factor_type',
-        'phone_number'
+        'phone_number',
+        'is_superuser',
+        'is_staff',
     ];
 
     /**
@@ -45,6 +48,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+    public function isSuperUser()
+    {
+        return $this->is_superuser;
+    }
+
+    public function isStaffUser()
+    {
+        return $this->is_staff;
+    }
+
     public function activeCode()
     {
      return $this->hasMany(ActiveCode::class);
@@ -53,5 +66,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasTwoFactory($key)
     {
         return $this->two_factor_type == $key ;
+    }
+
+    public function hasTwoFactorAuthenticatedEnabled()
+    {
+        return $this->two_factor_type !== 'off';
     }
 }
