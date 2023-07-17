@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\authTokenController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -29,7 +30,11 @@ Auth::routes(['verify' => true]);
 Route::prefix('auth/')->group(function () {
     Route::get('google', [GoogleAuthController::class, 'redirect'])->name('auth.google');
     Route::get('google/callback', [GoogleAuthController::class, 'callback']);
+    Route::get('token', [authTokenController::class, 'getToken'])->name('2fa.token');
+    Route::post('token', [authTokenController::class, 'postToken']);
 });
+
+
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/secret', function () {

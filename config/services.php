@@ -38,4 +38,8 @@ return [
 
     ],
 
+    'ghasedak' => [
+        'key' => env('GHASEDAK_API_KEY')
+    ],
+
 ];
