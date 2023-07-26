@@ -13,6 +13,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 class GoogleAuthController extends Controller
 {
     use TwoFactorAuthenticate;
+
     public function redirect()
     {
         return Socialite::driver('google')->redirect();
@@ -23,13 +24,17 @@ class GoogleAuthController extends Controller
         $googleUser = Socialite::driver('google')->user();
         $user = User::where('email', $googleUser->getEmail())->first();
 
-        if (! $user){
+        if (!$user) {
             $user == User::create([
                 'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
                 'password' => bcrypt(Str::random()),
+                'two_factor_type' => 'off'
             ]);
+        }
 
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
         }
 
         auth()->loginUsingId($user->id);
@@ -37,6 +42,6 @@ class GoogleAuthController extends Controller
 
 //        Alert::success('login successfully','welcome to your dashboard');
 
-        return $this->loggendin($request , $user) ?: redirect('/');
+        return $this->loggendin($request, $user) ?: redirect('/');
     }
 }

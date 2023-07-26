@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
- use http\Env\Request;
- use Illuminate\Contracts\Auth\MustVerifyEmail;
+use http\Env\Request;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -60,16 +60,51 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function activeCode()
     {
-     return $this->hasMany(ActiveCode::class);
+        return $this->hasMany(ActiveCode::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function hasTwoFactory($key)
     {
-        return $this->two_factor_type == $key ;
+        return $this->two_factor_type == $key;
     }
 
     public function hasTwoFactorAuthenticatedEnabled()
     {
         return $this->two_factor_type !== 'off';
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function permission()
+    {
+        return $this->belongsToMany(Permission::class);
+    }
+
+    public function hasRole($roles)
+    {
+        return (!!$roles->intersect($this->roles)->all());
+    }
+
+    public function hasPermission($permission)
+    {
+        return $this->permission->contains('name', $permission->name) || $this->hasRole($permission->roles);
     }
 }

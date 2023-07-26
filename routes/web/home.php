@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\authTokenController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -20,7 +23,9 @@ use RealRashid\SweetAlert\Facades\Alert;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+        return view('welcome');
+//$comment = \App\Models\Comment::find(1);
+//return $comment->commentable;
 });
 
 
@@ -37,6 +42,7 @@ Route::prefix('auth/')->group(function () {
 
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
 Route::get('/secret', function () {
     return 'secret';
 })->middleware(['auth', 'password.confirm']);
@@ -48,5 +54,9 @@ Route::prefix('profile/')->middleware('auth')->group(function () {
     Route::get('twodactor/phone', [ProfileController::class, 'getPhoneVerify'])->name('profile.2fa.phone');
     Route::post('twodactor/phone', [ProfileController::class, 'postPhoneVerify']);
 });
+
+Route::get('products',[ProductController::class , 'index']);
+Route::get('products/{product}',[ProductController::class , 'single']);
+Route::post('/comments' , [HomeController::class , 'comment'])->name('send.comment');
 
 
